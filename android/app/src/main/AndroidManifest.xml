@@ -1,0 +1,52 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
+   
+    <!-- Các quyền cần thiết cho liên kết động -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+
+
+    <application
+      android:name=".MainApplication"
+      android:label="@string/app_name"
+      android:icon="@mipmap/ic_launcher"
+      android:roundIcon="@mipmap/ic_launcher_round"
+      android:allowBackup="false"
+      android:theme="@style/AppTheme">
+
+      <activity
+        android:name=".MainActivity"
+        android:label="@string/app_name"
+        android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|screenSize|smallestScreenSize|uiMode"
+        android:launchMode="singleTask"
+        android:windowSoftInputMode="adjustResize"
+        android:exported="true"
+        >
+
+        <meta-data
+          android:name="com.google.android.gms.version"
+          android:value="@integer/google_play_services_version"
+        />
+
+        <intent-filter android:autoVerify="true">
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+            <action android:name="android.intent.action.DOWNLOAD_COMPLETE"/>
+        </intent-filter>
+        
+        <intent-filter >
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.DEFAULT" />
+            <category android:name="android.intent.category.BROWSABLE" />
+              <!-- Accepts URIs that begin with "example://gizmos” -->
+            <data android:scheme="https" android:host="deeplinkdemoapp0123.page.link" />
+        </intent-filter>
+
+      </activity>
+    </application>
+</manifest>
