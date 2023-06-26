@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { Image, SafeAreaView, View, Text, Share, ToastAndroid, Platform, PermissionsAndroid, Alert, CameraRoll } from "react-native";
+import React, { useEffect, Suspense, lazy } from "react";
+import { Image, SafeAreaView, View, Share, ToastAndroid, Platform, PermissionsAndroid, Alert, CameraRoll } from "react-native";
 import styles from "./styles";
 import Title from "../../components/Title";
 import Button from "../../components/Button";
@@ -9,6 +9,7 @@ import Clipboard from '@react-native-clipboard/clipboard';
 import RNFetchBlob from 'rn-fetch-blob';
 import firebase from '@react-native-firebase/app';
 import '@react-native-firebase/analytics';
+
 
 const RecipeDetails = ({ route }) => {
 
@@ -86,6 +87,14 @@ const RecipeDetails = ({ route }) => {
         }
     }
 
+    function Loading() {
+        return (
+            Alert.alert('Vui lòng chờ quá trình tải ảnh ...')
+        );
+    }
+
+    const SaveToGalleryComponent = lazy(() => saveToGallery());
+
     // Kiểm tra cấp quyền lưu trữ
     const checkPermission = async () => {
 
@@ -110,7 +119,10 @@ const RecipeDetails = ({ route }) => {
                     // Khi người dùng cấp quyền bắt đầu tải xuống
                     console.log('Đã cấp quyền lưu trữ');
                     // downloadImage();
-                    saveToGallery();
+
+                    <Suspense fallback={<Loading />} >
+                        <SaveToGalleryComponent />
+                    </Suspense>
                 } else {
                     // Nếu quyền bị từ chối thì log
                     console.log('Quyền lưu trữ không được cấp');
@@ -206,6 +218,16 @@ const RecipeDetails = ({ route }) => {
         }
     }
 
+
+
+    // const SaveToGalleryComponent = () => {
+    //     useEffect(() => {
+    //         saveToGallery();
+    //     }, []);
+
+    //     return null;
+    // };
+
     return (
         <SafeAreaView style={styles.container}>
             <Image style={styles.image} resizeMode="stretch" source={{ uri: item?.images[0] }} />
@@ -226,9 +248,12 @@ const RecipeDetails = ({ route }) => {
                     onPress={checkPermission}
                 />
             </View>
+
             <Title style={{ marginTop: 16, fontSize: 22 }} text={item?.name} />
             <Title style={{ marginTop: 16, fontSize: 26, fontWeight: '500', }} text={item?.entry_price} />
             <Title style={{ marginTop: 22, fontSize: 16, fontWeight: 'normal', color: 'grey' }} text={item?.address} />
+
+
         </SafeAreaView>
     );
 };
